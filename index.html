@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İl ve İlçe Seçimi</title>
+
+<body>
+
+    <label for="provinceInput">Enter Province Name:</label>
+    İller
+    <select class="il">
+<option value="" selected>İl Seçiniz</option>
+    </select>
+
+    <br>
+
+    İleçeler
+    <select class="ilce">
+        <option value="" selected>İlçe Seçiniz</option>
+
+    </select>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+
+        $(document).ready(function () {
+            var il = $(".il")
+            var ilce = $(".ilce")
+            $.ajax(
+                {
+                    url: "https://turkiyeapi.dev/api/v1/provinces",
+                    type: "GET",
+                    success: function (response) {
+                        response.data.forEach(element => {
+                            var option = $(`<option value="${element.name}" ></option>`).text(`${element.name}`);;
+                            $(il).append(option)
+                        });
+                    },
+                }
+            );
+
+
+            $(il).on('change', function () {
+                var value = this.value
+                
+                $(ilce).html('')
+
+                $.ajax(
+                    {
+                        url: `https://turkiyeapi.dev/api/v1/provinces?name=${value}`,
+                        type: "GET",
+                        success: function (response) {
+
+                            response.data[0].districts.forEach(element => {
+                                var option = $(`<option value="${element.name}" ></option>`).text(`${element.name}`);;
+                                $(ilce).append(option)
+                            });
+                        },
+                    }
+                );
+
+            });
+
+        })
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
